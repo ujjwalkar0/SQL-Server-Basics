@@ -1,20 +1,27 @@
--- Create a database
-create database DB;
-
--- Use a database
-use DB
+-- CREATE AND USE A DATABASE
+IF NOT EXISTS(SELECT * FROM SYS.DATABASES WHERE NAME='DB')
+BEGIN
+	CREATE DATABASE DB;
+	USE DB;
+END
+ELSE
+	USE DB;
 
 -- Create a table
-create table Patient(
-	Id int primary key,
-	FirstName varchar(255),
-	LastName varchar(255),
-	EmailId varchar(255) unique,
-	PhoneNo bigint unique
-)
 
--- Drop a table
-drop table Patient
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Patient')
+BEGIN
+	CREATE TABLE Patient(
+	ID INT PRIMARY KEY,
+	FIRSTNAME VARCHAR(255),
+	LASTNAME VARCHAR(255),
+	EMAILID VARCHAR(255) UNIQUE,
+	PHONENO BIGINT UNIQUE
+)
+END
+ELSE
+	PRINT 'TABLE ALREADY EXIST'
+
 
 -- Alter a table
 alter table Patient
@@ -61,11 +68,14 @@ where Id=1
 
 
 -- Create another table
-create table HeartPatient(
-	PatientId int primary key,
-	Details text,
-	Condition varchar(255)
-)
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='HeartPatient')
+	create table HeartPatient(
+		PatientId int primary key,
+		Details text,
+		Condition varchar(255)
+	)
+ELSE
+	PRINT 'TABLE ALREADY EXIST'
 
 
 -- Insert records
@@ -83,21 +93,24 @@ values(9, 'No problem', 'Normal')
 
 
 -- Create views
-create view HeartPatientDetails as
-select * from Patient
+GO
+CREATE OR ALTER VIEW HeartPatientDetails AS
+SELECT* FROM Patient
 INNER JOIN HeartPatient
 ON Patient.ID=HeartPatient.PatientId
-
 
 -- See a view
 select * from HeartPatientDetails
 
 -- Create a table
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Doctor')
 create table Doctor(
 	DoctorId int primary key,
 	PatientId int,
 	Specialist varchar(50)
 )
+ELSE
+	PRINT 'TABLE ALREADY EXIST'
 
 -- Alter a table
 alter table Doctor
@@ -122,6 +135,9 @@ values(5, NULL, 'Surgery')
 -- See Records
 select * from Doctor
 select * from Patient
+SELECT * FROM HeartPatient
+
+-- Inner Join
 
 
 -- Left Join
@@ -160,67 +176,25 @@ select Id from Patient
 -- Add foreign Key
 alter table HeartPatient add foreign key (PatientId) references Patient(Id)
 
--- index
 
+-- DROP TABLES AND VIEWS 
+IF OBJECT_ID('dbo.HeartPatientDetails', 'V') IS NOT NULL
+    DROP VIEW dbo.HeartPatientDetails
 
+	---------------------------------------------- DROP TABLE ----------------------------------------------
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='HeartPatient')
+	DROP TABLE HeartPatient
+ELSE
+	PRINT 'TABLE DOES NOT EXIST...'
 
-select * from indexname
-    
-Select  * From [HeartPatient] With (Index(2))
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Patient')
+	DROP TABLE Patient
+ELSE
+	PRINT 'TABLE DOES NOT EXIST...'
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='Doctor')
+	DROP TABLE Doctor
+ELSE
+	PRINT 'TABLE DOES NOT EXIST...'
 
-select * from HeartPatient
-
-
--- Procedure
-create procedure procedureName
-as
-select * from HeartPatient;
-GO;
-
-exec procedureName
-go;
-
-alter procedure procedureName @PatientId int
-as
-select * from HeartPatient where PatientId=@PatientId;
-go;
-
-exec procedureName @PatientId=6
-
-Select * from Patient
-
-begin tran
-exec Ujjwal.AddPatient @Id=399, @FirstName='dkjs', @LastName='jdhj', @EmailId='sadd@vkjfvkj', @PhoneNo=64083678678
-
-commit;
-
--- Cursor
-
-Declare
-@a varchar(255),
-@b varchar(255)
-
-declare cursor_name cursor
-for
-	select 
-		-- SQL Statement
-
-open cursor_name;
-fetch next from cursor_name into @FirstName, @LastName;
-
-
-while @@FETCH_STATUS=0
-	begin
-		select @a = iif(@FirstName is IS NULL, 'No Name', @FirstName);
-		print @FirstName + ' - ' + @LastName
-
-
-
-
--- Trigger
-
-drop table HeartPatient
-
-drop table Patient
