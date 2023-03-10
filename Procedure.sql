@@ -28,6 +28,6 @@ exec Ujjwal.AddPatient @Id=399, @FirstName='dkjs', @LastName='jdhj', @EmailId='s
 
 -- Call a Procedure with lock
 begin tran
-exec Ujjwal.AddPatient @Id=124, @FirstName='dkjs', @LastName='jdhj', @EmailId='a1hf@yfhtf', @PhoneNo=47786868678
+exec Ujjwal.AddPatient @Id=124, @FirstName='dkhjs', @LastName='judhj', @EmailId='a1h@yfhtf', @PhoneNo=4778868678
 select @@SPID
 commit;

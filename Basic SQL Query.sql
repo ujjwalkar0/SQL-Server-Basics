@@ -38,9 +38,6 @@ insert into Patient(Id, FirstName, LastName, EmailId, PhoneNo)
 values(4, 'Neha', 'Singh', 'neha.singh@gmail.com', 573573275);
 
 insert into Patient(Id, FirstName, LastName, EmailId, PhoneNo)
-values(5, 'Disha', 'Chd', 'balad@world.com', 5365763576);
-
-insert into Patient(Id, FirstName, LastName, EmailId, PhoneNo)
 values(6, 'Random', 'Name', 'name@rand.om', 786746756);
 
 insert into Patient(Id, FirstName, LastName, EmailId, PhoneNo)
